@@ -1,0 +1,72 @@
+1.To create pipeine project to perform install docker,start docker service,check status of docker,pull nginx image,run container with port no 8000
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('Update System') {
+            steps {
+                sh 'sudo yum update -y'
+            }
+        }
+        stage('Install Httpd') {
+            steps {
+                sh 'sudo yum install httpd -y'
+            }
+        }
+        stage('Start Httpd') {
+            steps {
+                sh 'sudo systemctl start httpd'
+            }
+        }
+        stage('Check Httpd Status') {
+            steps {
+                sh 'sudo systemctl status httpd'
+            }
+        }
+        stage('Result Test Page') {
+            steps {
+                echo 'Test page result'
+                // You can add further steps here to verify the test page.
+            }
+        }
+    }
+}                                                             
+
+2.To cretae pipeline tp perform update the system,install httpd,start httpd,check stages of httpd
+
+pipeline{
+    agent any
+    stages{
+        stage('install docker'){
+            steps{
+               sh 'sudo yum update -y'
+               sh 'sudo yum search docker'
+               sh 'sudo yum info docker'
+            sh 'sudo yum install -y docker'
+            sh 'sudo systemctl enable docker.service'
+            sh 'sudo systemctl start docker.service'
+            sh 'sudo systemctl status docker.service'
+            sh 'docker --version'
+            sh 'sudo yum install git -y'
+            sh 'sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose'
+            sh 'sudo chmod +x /usr/local/bin/docker-compose'
+                }
+        }
+        stage('Check Docker Status'){
+            steps{
+                sh 'sudo systemctl status docker'
+            }
+        }
+        stage('Pull NGINX Image'){
+            steps{
+                sh 'sudo docker pull nginx'
+            }
+        }
+        stage('Run NGINX Container'){
+            steps{
+                sh 'sudo docker run -d -p 8000:80 nginx'
+            }
+        }
+    }
+}
